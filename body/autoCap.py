@@ -1,5 +1,5 @@
 # (c) @biisal
-from pyrogram import Client, filters
+from pyrogram import Client, filters, enums
 from info import *
 import asyncio
 from .db import *
@@ -14,8 +14,10 @@ async def strtCap(bot, message):
     )
 
 
-@Client.on_message(filters.command("cap") & filters.channel)
+@Client.on_message(filters.command("cap"))
 async def setCap(bot, message):
+    if message.chat.type not in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
+        return await message.reply_text("Use this command in group !")
     if len(message.command) < 2:
         return await message.reply(
             "Usage: /cap <code>your caption (use {file_name} to show file name</code>)"
@@ -33,8 +35,10 @@ async def setCap(bot, message):
         return await message.reply(f"Your New Caption: {caption}")
 
 
-@Client.on_message(filters.command("delcap") & filters.channel)
+@Client.on_message(filters.command("delcap"))
 async def delCap(_, msg):
+    if message.chat.type not in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
+        return await message.reply_text("Use this command in group !")
     chnl_id = msg.chat.id
     try:
         await chnl_ids.delete_one({"chnl_id": chnl_id})
